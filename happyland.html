@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAPPY LAND - MBTI Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-pink: #FFD1DC;
+            --deep-pink: #FF748D; /* สีชมพูเน้นจุดเด่น */
+            --soft-blue: #D4F1F4;
+            --soft-green: #E2F0CB;
+            --accent-purple: #F3F3FF;
+            --text-gray: #555;
+            --mail-blue: #4285F4; /* เพิ่มสีปุ่มเมล */
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #fdfbfb;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 40px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.03);
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            position: relative; /* เพิ่มเพื่อให้ปุ่มเปลี่ยนภาษาอ้างอิงตำแหน่งได้ */
+        }
+
+        /* --- เพิ่ม CSS สำหรับการเปลี่ยนหน้าและพลุ --- */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            z-index: 999;
+            top: -10px;
+            border-radius: 2px;
+            animation: fall 3s linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(720deg); }
+        }
+
+        /* สไตล์ปุ่มเช็คเมล */
+        .btn-mail {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: white;
+            color: var(--mail-blue);
+            border: 2px solid var(--mail-blue);
+            padding: 12px 25px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+        }
+        .btn-mail:hover {
+            background-color: var(--mail-blue);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
+        }
+
+        /* --- เพิ่ม CSS ปุ่มเปลี่ยนภาษา --- */
+        .lang-switch {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1.5px solid #eee;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: 'Kanit';
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .lang-switch:hover {
+            background: var(--primary-pink);
+            color: #444;
+            border-color: var(--primary-pink);
+            transform: translateY(-2px);
+        }
+
+        /* --- ปรับปรุงหัวข้อ HAPPY LAND ให้คมชัดและมีไฟวิ่ง --- */
+        .title-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 40px;
+            animation: float 3.5s ease-in-out infinite;
+        }
+
+        h1.moving-title {
+            font-size: 3.5rem;
+            font-weight: 800; /* หนาพิเศษเพื่อให้อ่านง่าย */
+            margin: 0;
+            padding: 10px 30px;
+            background: white;
+            border-radius: 25px;
+            position: relative;
+            z-index: 2;
+            color: var(--deep-pink);
+            /* ขอบตัวหนังสือเพื่อให้ตัดกับไฟวิ่ง */
+            text-shadow: 
+                2px 2px 0px #fff, 
+                -2px -2px 0px #fff,  
+                2px -2px 0px #fff,
+                -2px 2px 0px #fff;
+            letter-spacing: 4px;
+        }
+
+        /* ไฟวิ่งรอบตัวหนังสือ ปรับให้ดูเป็นเส้นนีออนนุ่มๆ */
+        .title-container::before {
+            content: "";
+            position: absolute;
+            top: -6px; left: -6px; right: -6px; bottom: -6px;
+            z-index: 1;
+            background: linear-gradient(45deg, #ffadad, #ffd1dc, #fdffb6, #caffbf, #9bf6ff, #a0c4ff, #ffc6ff);
+            background-size: 300%;
+            border-radius: 30px;
+            filter: blur(12px);
+            opacity: 0.7;
+            animation: glow-run 8s linear infinite;
+
+        }
+
+        @keyframes glow-run {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* --- ปรับปรุงกล่องความรู้ --- */
+        .knowledge-container {
+            background-color: var(--accent-purple);
+            border-radius: 25px;
+            padding: 25px;
+            text-align: left;
+            margin: 10px 0 30px 0;
+            border: 1.5px solid #e2e2ff;
+            position: relative;
+        }
+
+        .knowledge-title {
+            color: #8a8acb;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+
+        .knowledge-content {
+            font-size: 0.9rem;
+            color: #6a6a6a;
+            line-height: 1.7;
+        }
+
+        .hidden { display: none; }
+
+        /* ปุ่มกด */
+        .btn-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--soft-blue);
+            color: #444;
+            padding: 18px;
+            border-radius: 20px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: 0.3s;
+            border: 1px solid #bde4e7;
+        }
+
+        .btn-link:hover { background-color: #bde4e7; transform: scale(1.02); }
+
+        .btn-next {
+            background-color: #f0f0f0;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 20px;
+            font-size: 1rem;
+            cursor: not-allowed;
+            font-family: 'Kanit';
+            color: #aaa;
+            transition: 0.4s;
+        }
+
+        .checkbox-wrapper {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            color: #777;
+            cursor: pointer;
+        }
+
+        /* หน้าฟอร์ม */
+        .rules-list {
+            text-align: left;
+            background: #fff9f9;
+            padding: 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            border-left: 6px solid var(--primary-pink);
+        }
+
+        .form-item { text-align: left; margin-bottom: 18px; }
+        label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #888; padding-left: 5px; }
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 1.5px solid #f0f0f0;
+            border-radius: 18px;
+            box-sizing: border-box;
+            background: #fafafa;
+            font-family: 'Kanit';
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--primary-pink); background: white; outline: none; }
+
+        /* --- ส่วนที่เพิ่มใหม่สำหรับกระดานความคิดเห็น --- */
+        .btn-community {
+            background-color: #f3f3ff;
+            color: #8a8acb;
+            border: 2px dashed #8a8acb;
+            padding: 12px;
+            border-radius: 15px;
+            width: 100%;
+            margin-top: 15px;
+            cursor: pointer;
+            font-family: 'Kanit';
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .btn-community:hover {
+            background-color: #8a8acb;
+            color: white;
+        }
+
+        .topic-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+
+        .topic-header {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--deep-pink);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .comment-box {
+            background: #f9f9f9;
+            padding: 10px 15px;
+            border-radius: 12px;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #555;
+            border-left: 3px solid var(--soft-blue);
+        }
+
+        .comment-input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-send {
+            background: var(--soft-green);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Kanit';
+            font-weight: 500;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            font-family: 'Kanit';
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="card" class="card">
+        <button class="lang-switch" onclick="toggleLanguage()" id="langBtn">EN / ไทย</button>
+
+        <div id="page1">
+            <div class="title-container">
+                <h1 class="moving-title">HAPPY LAND</h1>
+            </div>
+            
+            <div class="knowledge-container">
+                <span class="knowledge-title" id="kTitle">✨ เกร็ดความรู้: MBTI คืออะไร?</span>
+                <div class="knowledge-content" id="kContent">
+                    <b>MBTI</b> คือกุญแจที่ช่วยให้เราเข้าใจความแตกต่างของนิสัยคน 16 แบบ การรู้ Type ของตัวเองจะช่วยให้คุณดึง "จุดแข็ง" ออกมาใช้ได้อย่างเต็มที่ และทำให้ชุมชนของเราเต็มไปด้วยความเข้าใจกันครับ
+                </div>
+            </div>
+
+            <a href="https://www.16personalities.com/free-personality-test" target="_blank" class="btn-link" id="testBtn">
+                🚀 คลิกเพื่อเริ่มทำแบบทดสอบ
+            </a>
+            
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="checkDone" onchange="toggleButton()" style="width: 20px; height: 20px; cursor: pointer;">
+                <label for="checkDone" id="checkLabel" style="cursor: pointer; user-select: none;">ฉันทำแบบทดสอบเรียบร้อยแล้ว</label>
+            </div>
+
+            <button id="mainBtn" class="btn-next" onclick="goToForm()" disabled>ลงทะเบียนเข้าเมือง</button>
+
+            <button class="btn-community" onclick="showCommunity()">💬 กระดานความคิดเห็นชุมชน</button>
+        </div>
+
+        <div id="page2" class="hidden">
+            <h1 style="color: var(--deep-pink); margin-top: 0;">HAPPY LAND</h1>
+            <div class="rules-list" id="rulesBox">
+                <b>🏠 กฎกติกาการเข้าเมือง:</b><br><br>
+                1. ตั้งชื่อตัวละคร ชื่อจริง + Type<br>
+                2. ใช้คำพูดสุภาพ ให้เกียรติซึ่งกันและกัน<br>
+                3. ห้ามก่อกวนหรือรบกวนผู้อื่น<br>
+                4. ปฏิบัติตามคำแนะนำของแอดมิน
+            </div>
+            <form action="https://docs.google.com/forms/d/e/1FAIpQLSeAdVWyvNu_m6OJJBaDgBajuU2sw23_FbHwKjBqDTxcXG9cHw/formResponse" method="POST" target="secret_frame" onsubmit="submitted=true;">
+                <div class="form-item">
+                    <label id="labelEmail">อีเมล</label>
+                    <input type="email" name="entry.83039449" id="inputEmail" required placeholder="example@email.com">
+                </div>
+                <div class="form-item">
+                    <label id="labelName">ชื่อจริง</label>
+                    <input type="text" name="entry.726004286" id="inputName" required placeholder="กรอกเฉพาะชื่อจริง">
+                </div>
+                <div class="form-item">
+                    <label id="labelType">ระบุ Type</label>
+                    <input type="text" name="entry.1706078916" id="inputType" required placeholder="กรอกตัวอักษร 4 ตัว">             
+                </div>
+                <button type="submit" class="btn-next" id="submitBtn" style="background-color: var(--soft-green); color: #444; cursor: pointer; font-weight: 500;">บันทึกข้อมูลและเข้าเมือง</button>
+            </form>
+        </div>
+
+        <div id="success" class="hidden">
+            <div style="font-size: 5.5rem; margin-bottom: 20px;">🌈</div>
+            <h1 style="color: #8a8acb; margin: 0;" id="successTitle">ยินดีต้อนรับ!</h1>
+            <p style="color: #888;" id="successDesc">บันทึกข้อมูลสำเร็จแล้ว<br>เตรียมพบความสนุกใน HAPPY LAND ได้เลย</p>
+            <a href="https://mail.google.com" target="_blank" class="btn-mail" id="checkEmailBtn">
+                📧 <span id="checkEmailText">เช็คอีเมลของคุณ</span>
+            </a>
+            <button class="btn-community" onclick="showCommunity()">💬 ไปที่กระดานความคิดเห็น</button>
+        </div>
+
+        <div id="communityPage" class="hidden">
+            <button class="back-btn" onclick="goBackToHome()">⬅ กลับหน้าแรก</button>
+            <h2 style="color: #8a8acb; margin-bottom: 20px;">Community Board</h2>
+            
+            <div style="margin-bottom: 30px; text-align: left;">
+                <label style="color: #555; font-weight: 600;">สร้างหัวข้อใหม่</label>
+                <input type="text" id="topicInput" placeholder="พิมพ์หัวข้อที่คุณต้องการพูดคุย..." style="margin-bottom: 10px;">
+                <button class="btn-next" onclick="createNewTopic()" style="background-color: var(--primary-pink); color: #444; cursor: pointer; opacity: 1;">✨ กดเพื่อสร้างหัวข้อ</button>
+            </div>
+
+            <div id="topicsContainer">
+                </div>
+        </div>
+    </div>
+
+    <iframe name="secret_frame" id="secret_frame" style="display:none;" onload="if(submitted){ showSuccess(); }"></iframe>
+
+    <script>
+        var submitted = false;
+        var currentLang = 'th';
+
+        const translations = {
+            th: {
+                kTitle: "✨ เกร็ดความรู้: MBTI คืออะไร?",
+                kContent: "<b>MBTI</b> คือกุญแจที่ช่วยให้เราเข้าใจความแตกต่างของนิสัยคน 16 แบบ การรู้ Type ของตัวเองจะช่วยให้คุณดึง \"จุดแข็ง\" ออกมาใช้ได้อย่างเต็มที่ และทำให้ชุมชนของเราเต็มไปด้วยความเข้าใจกันครับ",
+                testBtn: "🚀 คลิกเพื่อเริ่มทำแบบทดสอบ",
+                checkLabel: "ฉันทำแบบทดสอบเรียบร้อยแล้ว",
+                mainBtn: "ลงทะเบียนเข้าเมือง",
+                rulesBox: "<b>🏠 กฎกติกาการเข้าเมือง:</b><br><br>1. ตั้งชื่อตัวละคร ชื่อจริง + Type<br>2. ใช้คำพูดสุภาพ ให้เกียรติซึ่งกันและกัน<br>3. ห้ามก่อกวนหรือรบกวนผู้อื่น<br>4. ปฏิบัติตามคำแนะนำของแอดมิน",
+                labelEmail: "อีเมล",
+                labelName: "ชื่อจริง",
+                labelType: "ระบุ Type",
+                inputEmail: "example@email.com",
+                inputName: "กรอกเฉพาะชื่อจริง",
+                inputType: "กรอกตัวอักษร 4 ตัว",
+                submitBtn: "บันทึกข้อมูลและเข้าเมือง",
+                successTitle: "ยินดีต้อนรับ!",
+                successDesc: "บันทึกข้อมูลสำเร็จแล้ว<br>เตรียมพบความสนุกใน HAPPY LAND ได้เลย",
+                checkEmailText: "เช็คอีเมลของคุณ"
+            },
+            en: {
+                kTitle: "✨ Knowledge: What is MBTI?",
+                kContent: "<b>MBTI</b> is a key to understanding 16 different personality types. Knowing your Type helps you maximize your strengths and builds a community full of mutual understanding.",
+                testBtn: "🚀 Click to Start Test",
+                checkLabel: "I have completed the test",
+                mainBtn: "Enter the City",
+                rulesBox: "<b>🏠 City Rules:</b><br><br>1. Set name as Real Name + Type<br>2. Use polite language and respect others<br>3. No harassment or disturbance<br>4. Follow Admin instructions",
+                labelEmail: "Email",
+                labelName: "First Name",
+                labelType: "Specify Type",
+                inputEmail: "example@email.com",
+                inputName: "Enter your real name",
+                inputType: "Enter 4 letters (e.g. ENFP)",
+                submitBtn: "Save and Enter City",
+                successTitle: "Welcome!",
+                successDesc: "Data saved successfully.<br>Get ready for fun in HAPPY LAND!",
+                checkEmailText: "Check Your Email"
+            }
+        };
+
+        function launchConfetti() {
+            const colors = ['#FFD1DC', '#D4F1F4', '#E2F0CB', '#F3F3FF', '#FF748D'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confetti.style.opacity = Math.random();
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 4000);
+            }
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'th' ? 'en' : 'th';
+            document.getElementById('kTitle').innerText = translations[currentLang].kTitle;
+            document.getElementById('kContent').innerHTML = translations[currentLang].kContent;
+            document.getElementById('testBtn').innerText = translations[currentLang].testBtn;
+            document.getElementById('checkLabel').innerText = translations[currentLang].checkLabel;
+            document.getElementById('mainBtn').innerText = translations[currentLang].mainBtn;
+            document.getElementById('rulesBox').innerHTML = translations[currentLang].rulesBox;
+            document.getElementById('labelEmail').innerText = translations[currentLang].labelEmail;
+            document.getElementById('labelName').innerText = translations[currentLang].labelName;
+            document.getElementById('labelType').innerText = translations[currentLang].labelType;
+            document.getElementById('inputEmail').placeholder = translations[currentLang].inputEmail;
+            document.getElementById('inputName').placeholder = translations[currentLang].inputName;
+            document.getElementById('inputType').placeholder = translations[currentLang].inputType;
+            document.getElementById('submitBtn').innerText = translations[currentLang].submitBtn;
+            document.getElementById('successTitle').innerText = translations[currentLang].successTitle;
+            document.getElementById('successDesc').innerHTML = translations[currentLang].successDesc;
+            document.getElementById('checkEmailText').innerText = translations[currentLang].checkEmailText;
+            document.getElementById('langBtn').innerText = currentLang === 'th' ? 'EN / ไทย' : 'ไทย / EN';
+        }
+
+        function toggleButton() {
+            const chk = document.getElementById('checkDone');
+            const btn = document.getElementById('mainBtn');
+            btn.disabled = !chk.checked;
+            btn.style.backgroundColor = chk.checked ? 'var(--primary-pink)' : '#f0f0f0';
+            btn.style.color = chk.checked ? '#444' : '#aaa';
+            btn.style.cursor = chk.checked ? 'pointer' : 'not-allowed';
+            btn.style.boxShadow = chk.checked ? '0 8px 20px rgba(255, 209, 220, 0.4)' : 'none';
+        }
+
+        function goToForm() {
+            document.getElementById('page1').classList.add('hidden');
+            const p2 = document.getElementById('page2');
+            p2.classList.remove('hidden');
+            p2.classList.add('fade-in');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function showSuccess() {
+            document.getElementById('page2').classList.add('hidden');
+            document.getElementById('communityPage').classList.add('hidden');
+            const sc = document.getElementById('success');
+            sc.classList.remove('hidden');
+            sc.classList.add('fade-in');
+            launchConfetti();
+        }
+
+        /* --- ฟังก์ชันใหม่สำหรับระบบความคิดเห็น --- */
+        function showCommunity() {
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('success').classList.add('hidden');
+            const cp = document.getElementById('communityPage');
+            cp.classList.remove('hidden');
+            cp.classList.add('fade-in');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function goBackToHome() {
+            document.getElementById('communityPage').classList.add('hidden');
+            document.getElementById('page1').classList.remove('hidden');
+            document.getElementById('page1').classList.add('fade-in');
+        }
+
+        function createNewTopic() {
+            const input = document.getElementById('topicInput');
+            const container = document.getElementById('topicsContainer');
+            if (input.value.trim() === "") return;
+
+            const topicId = Date.now();
+            const topicHtml = `
+                <div class="topic-card fade-in">
+                    <div class="topic-header">${input.value}</div>
+                    <div id="comments-${topicId}"></div>
+                    <div class="comment-input-group">
+                        <input type="text" id="input-${topicId}" placeholder="พิมพ์คอมเมนต์ของคุณ..." style="padding: 10px; border-radius: 12px;">
+                        <button class="btn-send" onclick="addComment(${topicId})">ส่ง</button>
+                    </div>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('afterbegin', topicHtml);
+            input.value = "";
+        }
+
+        function addComment(id) {
+            const input = document.getElementById(`input-${id}`);
+            const container = document.getElementById(`comments-${id}`);
+            if (input.value.trim() === "") return;
+
+            const commentHtml = `<div class="comment-box fade-in">${input.value}</div>`;
+            container.insertAdjacentHTML('beforeend', commentHtml);
+            input.value = "";
+        }
+(function() {
+            // 1. โหลดข้อมูลเก่าที่บันทึกไว้ในความจำเครื่อง
+            const renderSavedData = () => {
+                const container = document.getElementById('topicsContainer');
+                const savedData = localStorage.getItem('happy_land_persistence');
+                if(!container || !savedData) return;
+                
+                // ล้างของเก่าในจอออกก่อนเพื่อไม่ให้เด้งซ้ำ
+                container.innerHTML = ""; 
+                
+                const topics = JSON.parse(savedData);
+                // นำข้อมูลจากความจำมาวาดใหม่
+                topics.forEach(topic => {
+                    const topicHtml = `
+                        <div class="topic-card fade-in">
+                            <div class="topic-header">${topic.title}</div>
+                            <div id="comments-${topic.id}">${topic.comments.map(c => `<div class="comment-box fade-in">${c}</div>`).join('')}</div>
+                            <div class="comment-input-group">
+                                <input type="text" id="input-${topic.id}" placeholder="พิมพ์คอมเมนต์ของคุณ..." style="padding: 10px; border-radius: 12px;">
+                                <button class="btn-send" onclick="addComment(${topic.id})">ส่ง</button>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('afterbegin', topicHtml);
+                });
+            };
+
+            // 2. ตรวจสอบสถานะหน้าจอว่าล่าสุดเปิดหน้าไหนค้างไว้
+            window.addEventListener('DOMContentLoaded', function() {
+                renderSavedData();
+                const lastPage = localStorage.getItem('current_page');
+                if (lastPage === 'communityPage') {
+                    setTimeout(() => {
+                        if(typeof showCommunity === "function") showCommunity();
+                    }, 50);
+                }
+            });
+        })();
+
+        // 3. ปรับแต่งฟังก์ชันเดิมให้แอบบันทึกสถานะหน้าจอลงความจำ
+        const originalShowCommunity = showCommunity;
+        showCommunity = function() {
+            originalShowCommunity();
+            localStorage.setItem('current_page', 'communityPage');
+        };
+
+        const originalGoBackToHome = goBackToHome;
+        goBackToHome = function() {
+            originalGoBackToHome();
+            localStorage.setItem('current_page', 'page1');
+        };
+
+        // 4. ปรับแต่งการสร้างหัวข้อให้เซฟลงความจำ
+        const originalCreateTopic = createNewTopic;
+        createNewTopic = function() {
+            const input = document.getElementById('topicInput');
+            const title = input ? input.value.trim() : "";
+            if (title !== "") {
+                const newId = Date.now();
+                const currentData = JSON.parse(localStorage.getItem('happy_land_persistence')) || [];
+                currentData.push({ id: newId, title: title, comments: [] });
+                localStorage.setItem('happy_land_persistence', JSON.stringify(currentData));
+                
+                // ใช้ Date.now() หลอกเพื่อให้ฟังก์ชันเดิมสร้าง ID เดียวกัน
+                const tempNow = Date.now;
+                Date.now = () => newId;
+                originalCreateTopic();
+                Date.now = tempNow;
+            }
+        };
+
+        // 5. ปรับแต่งการเพิ่มคอมเมนต์ให้เซฟลงความจำ
+        const originalAddComment = addComment;
+        addComment = function(id) {
+            const input = document.getElementById(`input-${id}`);
+            const text = input ? input.value.trim() : "";
+            if (text !== "") {
+                const currentData = JSON.parse(localStorage.getItem('happy_land_persistence')) || [];
+                const topic = currentData.find(t => t.id == id);
+                if (topic) {
+                    topic.comments.push(text);
+                    localStorage.setItem('happy_land_persistence', JSON.stringify(currentData));
+                }
+            }
+            originalAddComment(id);
+        };
+/* --- ส่วนเสริม: ฟังก์ชันลบหัวข้อ (วางต่อท้ายสุด) --- */
+
+// 1. เพิ่มปุ่มลบเข้าไปในหน้าจอ (โดยไม่แก้โค้ดวาดเดิม)
+const observer = new MutationObserver(() => {
+    const cards = document.querySelectorAll('.topic-card');
+    cards.forEach((card, index) => {
+        // ตรวจสอบว่ามีปุ่มลบหรือยัง ถ้ายังให้เพิ่มเข้าไป
+        if (!card.querySelector('.btn-delete-custom')) {
+            const deleteBtn = document.createElement('button');
+            deleteBtn.innerHTML = '✕ ลบหัวข้อนี้';
+            deleteBtn.className = 'btn-delete-custom';
+            // สไตล์ปุ่มลบ
+            Object.assign(deleteBtn.style, {
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+                background: '#ffeded',
+                color: '#ff4d4d',
+                border: '1px solid #ff4d4d',
+                borderRadius: '8px',
+                padding: '2px 8px',
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+                fontFamily: 'Kanit'
+            });
+
+            deleteBtn.onclick = function() {
+                if (confirm('คุณต้องการลบหัวข้อนี้ใช่หรือไม่?')) {
+                    // ดึงข้อมูลปัจจุบันออกมา
+                    let currentData = JSON.parse(localStorage.getItem('happy_land_persistence')) || [];
+                    
+                    // หาข้อมูลที่ตรงกับข้อความใน Header (เนื่องจากโค้ดเก่าไม่ได้ส่ง ID มาที่ปุ่ม)
+                    const titleText = card.querySelector('.topic-header').innerText;
+                    
+                    // กรองเอาอันที่ไม่ใช่ออก (ลบอันที่เลือก)
+                    const newData = currentData.filter(t => t.title !== titleText);
+                    
+                    // บันทึกกลับและรีเฟรชหน้า
+                    localStorage.setItem('happy_land_persistence', JSON.stringify(newData));
+                    location.reload(); 
+                }
+            };
+            card.style.position = 'relative'; // ทำให้ปุ่มเกาะมุมได้
+            card.appendChild(deleteBtn);
+        }
+    });
+});
+
+// สั่งให้ตัวตรวจจับทำงานเมื่อมีการเปลี่ยนแปลงในหน้ากระดาน
+const config = { childList: true, subtree: true };
+const targetNode = document.getElementById('topicsContainer');
+if (targetNode) observer.observe(targetNode, config);
+
+/* --- จบบริเวณส่วนเสริม --- */
+    </script>
+</body>
+</html>
